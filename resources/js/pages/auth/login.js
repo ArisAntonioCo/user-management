@@ -1,5 +1,5 @@
 import { isAuthenticated, setToken, setUser } from '../../services/auth';
-import { publicRequest } from '../../api/client';
+import api from '../../api/client';
 import { showErrors, clearMessages } from '../../utils/ui';
 
 export function init() {
@@ -16,18 +16,13 @@ export function init() {
         const password = document.getElementById('password').value;
 
         try {
-            const response = await publicRequest('/login', { email, password });
-            const data = await response.json();
-
-            if (response.ok) {
-                setToken(data.token);
-                setUser(data.user.data || data.user);
-                window.location.href = '/dashboard';
-            } else {
-                showErrors(data.errors || data.message);
-            }
+            const { data } = await api.post('/login', { email, password });
+            setToken(data.token);
+            setUser(data.user.data || data.user);
+            window.location.href = '/dashboard';
         } catch (error) {
-            showErrors('An unexpected error occurred. Please try again.');
+            const data = error.response?.data;
+            showErrors(data?.errors || data?.message || 'An unexpected error occurred. Please try again.');
         }
     });
 }

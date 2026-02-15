@@ -1,5 +1,5 @@
 import { isAuthenticated } from '../../services/auth';
-import { apiRequest } from '../../api/client';
+import api from '../../api/client';
 import { showErrors, clearMessages } from '../../utils/ui';
 
 export function init() {
@@ -21,20 +21,11 @@ export function init() {
         };
 
         try {
-            const response = await apiRequest('/users', {
-                method: 'POST',
-                body: JSON.stringify(data),
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                window.location.href = '/users';
-            } else {
-                showErrors(result.errors || result.message);
-            }
+            await api.post('/users', data);
+            window.location.href = '/users';
         } catch (error) {
-            showErrors('An unexpected error occurred. Please try again.');
+            const result = error.response?.data;
+            showErrors(result?.errors || result?.message || 'An unexpected error occurred. Please try again.');
         }
     });
 }

@@ -1,5 +1,5 @@
 import { isAuthenticated, getUser } from '../../services/auth';
-import { apiRequest } from '../../api/client';
+import api from '../../api/client';
 import { showErrors, showSuccess, escapeHtml } from '../../utils/ui';
 
 let currentPage = 1;
@@ -69,13 +69,12 @@ async function loadUsers(page) {
     updateUrl();
 
     try {
-        const params = new URLSearchParams({ page });
+        const params = { page };
         if (currentSearch) {
-            params.set('search', currentSearch);
+            params.search = currentSearch;
         }
 
-        const response = await apiRequest(`/users?${params}`);
-        const data = await response.json();
+        const { data } = await api.get('/users', { params });
         const users = data.data;
         const meta = data.meta;
         const currentUser = getUser();
@@ -171,20 +170,14 @@ async function confirmDelete() {
     }
 
     try {
-        const response = await apiRequest(`/users/${deleteUserId}`, { method: 'DELETE' });
-
-        if (response.status === 204 || response.ok) {
-            deleteModal.hide();
-            showSuccess('User deleted successfully.');
-            loadUsers(currentPage);
-        } else {
-            const data = await response.json();
-            deleteModal.hide();
-            showErrors(data.message || 'Failed to delete user.');
-        }
+        await api.delete(`/users/${deleteUserId}`);
+        deleteModal.hide();
+        showSuccess('User deleted successfully.');
+        loadUsers(currentPage);
     } catch (error) {
         deleteModal.hide();
-        showErrors('An unexpected error occurred.');
+        const data = error.response?.data;
+        showErrors(data?.message || 'Failed to delete user.');
     }
 
     deleteUserId = null;

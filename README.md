@@ -7,7 +7,7 @@ A secure, API-driven User Management system built with Laravel 12 and Sanctum. F
 - **Backend:** PHP 8.5, Laravel 12, Laravel Sanctum 4
 - **Database:** PostgreSQL 18
 - **Cache/Queue:** Redis
-- **Frontend:** Blade templates, Tailwind CSS 4, Axios
+- **Frontend:** Blade templates, Bootstrap 5, Tailwind CSS 4, vanilla JS
 - **Testing:** Pest 4
 - **Containerization:** Docker via Laravel Sail
 
@@ -33,20 +33,14 @@ cp .env.example .env
 # 4. Generate application key
 php artisan key:generate
 
-# 5. Install Sail (select: pgsql, redis, mailpit)
-php artisan sail:install
-
-# 6. Start Docker containers
+# 5. Start Docker containers
 ./vendor/bin/sail up -d
 
-# 7. Run migrations and seed the database
+# 6. Run migrations and seed the database
 ./vendor/bin/sail artisan migrate
 ./vendor/bin/sail artisan db:seed
 
-# 8. Install frontend dependencies and build
-./vendor/bin/sail root-shell
-npm install -g pnpm
-exit
+# 7. Install frontend dependencies and build
 ./vendor/bin/sail shell
 pnpm install
 pnpm run build
@@ -324,9 +318,14 @@ All user endpoints require `Authorization: Bearer {token}` header.
 #### List Users (Paginated)
 
 ```
-GET /api/v1/users
+GET /api/v1/users?page=1&search=john
 Authorization: Bearer {token}
 ```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `page` | integer | Page number (default: 1) |
+| `search` | string | Search by name or email (optional) |
 
 **Response (200):**
 

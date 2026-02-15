@@ -1,6 +1,6 @@
 import './bootstrap';
 import { isAuthenticated, getUser, removeToken } from './services/auth';
-import { apiRequest } from './api/client';
+import api from './api/client';
 import { showLayout } from './utils/ui';
 
 import * as loginPage from './pages/auth/login';
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async function () {
             try {
-                await apiRequest('/logout', { method: 'POST' });
+                await api.post('/logout');
             } catch (e) {
                 // Ignore errors
             }

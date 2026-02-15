@@ -1,5 +1,5 @@
 import { isAuthenticated, setUser } from '../services/auth';
-import { apiRequest } from '../api/client';
+import api from '../api/client';
 import { showLayout, escapeHtml } from '../utils/ui';
 
 export async function init() {
@@ -9,8 +9,7 @@ export async function init() {
     }
 
     try {
-        const response = await apiRequest('/user');
-        const data = await response.json();
+        const { data } = await api.get('/user');
         const user = data.data || data;
 
         setUser(user);

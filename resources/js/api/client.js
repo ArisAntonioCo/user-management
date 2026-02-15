@@ -1,40 +1,31 @@
+import axios from 'axios';
 import { getToken, removeToken } from '../services/auth';
 
-const API_BASE = '/api/v1';
-
-export async function apiRequest(url, options = {}) {
-    const token = getToken();
-    const headers = {
+const api = axios.create({
+    baseURL: '/api/v1',
+    headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        ...options.headers,
-    };
+    },
+});
 
+api.interceptors.request.use(config => {
+    const token = getToken();
     if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
+});
 
-    const response = await fetch(`${API_BASE}${url}`, {
-        ...options,
-        headers,
-    });
-
-    if (response.status === 401) {
-        removeToken();
-        window.location.href = '/login';
-        throw new Error('Unauthenticated');
+api.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response && error.response.status === 401) {
+            removeToken();
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
     }
+);
 
-    return response;
-}
-
-export async function publicRequest(url, data = {}) {
-    return fetch(`${API_BASE}${url}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify(data),
-    });
-}
+export default api;

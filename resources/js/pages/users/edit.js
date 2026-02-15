@@ -1,5 +1,5 @@
 import { isAuthenticated, getUser, setUser } from '../../services/auth';
-import { apiRequest } from '../../api/client';
+import api from '../../api/client';
 import { showErrors, showSuccess, showLayout, clearMessages } from '../../utils/ui';
 
 export async function init() {
@@ -15,8 +15,7 @@ export async function init() {
     }
 
     try {
-        const response = await apiRequest(`/users/${userId}`);
-        const result = await response.json();
+        const { data: result } = await api.get(`/users/${userId}`);
         const user = result.data || result;
 
         document.getElementById('name').value = user.name;
@@ -52,24 +51,15 @@ export async function init() {
         }
 
         try {
-            const response = await apiRequest(`/users/${userId}`, {
-                method: 'PUT',
-                body: JSON.stringify(data),
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                showSuccess('User updated successfully.');
-                if (currentUser && currentUser.id === parseInt(userId)) {
-                    setUser(result.user.data || result.user);
-                    showLayout();
-                }
-            } else {
-                showErrors(result.errors || result.message);
+            const { data: result } = await api.put(`/users/${userId}`, data);
+            showSuccess('User updated successfully.');
+            if (currentUser && currentUser.id === parseInt(userId)) {
+                setUser(result.user.data || result.user);
+                showLayout();
             }
         } catch (error) {
-            showErrors('An unexpected error occurred. Please try again.');
+            const result = error.response?.data;
+            showErrors(result?.errors || result?.message || 'An unexpected error occurred. Please try again.');
         }
     });
 }

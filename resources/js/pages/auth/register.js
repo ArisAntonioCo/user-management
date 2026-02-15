@@ -1,5 +1,5 @@
 import { isAuthenticated, setToken, setUser } from '../../services/auth';
-import { publicRequest } from '../../api/client';
+import api from '../../api/client';
 import { showErrors, clearMessages } from '../../utils/ui';
 
 export function init() {
@@ -12,26 +12,20 @@ export function init() {
         e.preventDefault();
         clearMessages();
 
-        const data = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            password: document.getElementById('password').value,
-            password_confirmation: document.getElementById('password_confirmation').value,
-        };
-
         try {
-            const response = await publicRequest('/register', data);
-            const result = await response.json();
+            const { data } = await api.post('/register', {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                password_confirmation: document.getElementById('password_confirmation').value,
+            });
 
-            if (response.ok) {
-                setToken(result.token);
-                setUser(result.user.data || result.user);
-                window.location.href = '/dashboard';
-            } else {
-                showErrors(result.errors || result.message);
-            }
+            setToken(data.token);
+            setUser(data.user.data || data.user);
+            window.location.href = '/dashboard';
         } catch (error) {
-            showErrors('An unexpected error occurred. Please try again.');
+            const data = error.response?.data;
+            showErrors(data?.errors || data?.message || 'An unexpected error occurred. Please try again.');
         }
     });
 }
