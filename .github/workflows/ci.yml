@@ -69,11 +69,25 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
 
       - name: Install pnpm
         run: npm install -g pnpm
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: pnpm-
 
       - name: Install frontend dependencies
         run: pnpm install
@@ -86,6 +100,9 @@ jobs:
 
       - name: Build frontend assets
         run: pnpm run build
+
+      - name: Security audit
+        run: composer audit
 
       - name: Run Pint check
         run: vendor/bin/pint --test
