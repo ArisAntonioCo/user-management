@@ -1,5 +1,11 @@
 import { isAuthenticated, getUser } from '../services/auth';
 
+export function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 export function showErrors(errors, containerId = 'error-container') {
     const container = document.getElementById(containerId);
     if (!container) {
@@ -7,9 +13,9 @@ export function showErrors(errors, containerId = 'error-container') {
     }
 
     if (typeof errors === 'string') {
-        container.innerHTML = `<div class="alert alert-danger">${errors}</div>`;
+        container.innerHTML = `<div class="alert alert-danger">${escapeHtml(errors)}</div>`;
     } else if (typeof errors === 'object') {
-        const messages = Object.values(errors).flat().join('<br>');
+        const messages = Object.values(errors).flat().map(m => escapeHtml(m)).join('<br>');
         container.innerHTML = `<div class="alert alert-danger">${messages}</div>`;
     }
 }
@@ -20,7 +26,7 @@ export function showSuccess(message, containerId = 'error-container') {
         return;
     }
 
-    container.innerHTML = `<div class="alert alert-success">${message}</div>`;
+    container.innerHTML = `<div class="alert alert-success">${escapeHtml(message)}</div>`;
 }
 
 export function clearMessages(containerId = 'error-container') {

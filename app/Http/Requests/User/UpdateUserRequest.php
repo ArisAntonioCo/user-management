@@ -17,11 +17,16 @@ class UpdateUserRequest extends FormRequest
     /** @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string> */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'string', 'email', 'max:255', Rule::unique('users')->ignore($this->route('user'))],
             'password' => ['sometimes', 'string', 'min:8', 'confirmed'],
-            'role' => ['sometimes', 'string', new Enum(UserRole::class)],
         ];
+
+        if ($this->user()->isAdmin()) {
+            $rules['role'] = ['sometimes', 'string', new Enum(UserRole::class)];
+        }
+
+        return $rules;
     }
 }

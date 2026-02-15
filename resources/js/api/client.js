@@ -22,7 +22,7 @@ export async function apiRequest(url, options = {}) {
     if (response.status === 401) {
         removeToken();
         window.location.href = '/login';
-        return;
+        throw new Error('Unauthenticated');
     }
 
     return response;

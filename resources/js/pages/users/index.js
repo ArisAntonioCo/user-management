@@ -1,6 +1,6 @@
 import { isAuthenticated, getUser } from '../../services/auth';
 import { apiRequest } from '../../api/client';
-import { showErrors, showSuccess } from '../../utils/ui';
+import { showErrors, showSuccess, escapeHtml } from '../../utils/ui';
 
 let currentPage = 1;
 let deleteUserId = null;
@@ -68,10 +68,10 @@ async function loadUsers(page) {
             html += `
                 <tr>
                     <td>${user.id}</td>
-                    <td>${user.name}</td>
-                    <td class="text-muted">${user.email}</td>
+                    <td>${escapeHtml(user.name)}</td>
+                    <td class="text-muted">${escapeHtml(user.email)}</td>
                     <td>
-                        <span class="badge ${user.role === 'admin' ? 'bg-primary' : 'bg-secondary'}">${user.role}</span>
+                        <span class="badge ${user.role === 'admin' ? 'bg-primary' : 'bg-secondary'}">${escapeHtml(user.role)}</span>
                     </td>
                     <td class="text-muted">${new Date(user.created_at).toLocaleDateString()}</td>`;
 

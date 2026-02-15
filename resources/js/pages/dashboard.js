@@ -1,6 +1,6 @@
 import { isAuthenticated, setUser } from '../services/auth';
 import { apiRequest } from '../api/client';
-import { showLayout } from '../utils/ui';
+import { showLayout, escapeHtml } from '../utils/ui';
 
 export async function init() {
     if (!isAuthenticated()) {
@@ -22,7 +22,7 @@ export async function init() {
                     <div class="card bg-light">
                         <div class="card-body">
                             <h6 class="text-primary text-uppercase small fw-semibold">Welcome</h6>
-                            <p class="fs-4 fw-bold mb-0">${user.name}</p>
+                            <p class="fs-4 fw-bold mb-0">${escapeHtml(user.name)}</p>
                         </div>
                     </div>
                 </div>
@@ -30,7 +30,7 @@ export async function init() {
                     <div class="card bg-light">
                         <div class="card-body">
                             <h6 class="text-success text-uppercase small fw-semibold">Email</h6>
-                            <p class="fs-5 mb-0">${user.email}</p>
+                            <p class="fs-5 mb-0">${escapeHtml(user.email)}</p>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@ export async function init() {
                     <div class="card bg-light">
                         <div class="card-body">
                             <h6 class="text-purple text-uppercase small fw-semibold">Role</h6>
-                            <p class="fs-5 mb-0 text-capitalize">${user.role}</p>
+                            <p class="fs-5 mb-0 text-capitalize">${escapeHtml(user.role)}</p>
                         </div>
                     </div>
                 </div>

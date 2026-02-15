@@ -62,7 +62,7 @@ export async function init() {
             if (response.ok) {
                 showSuccess('User updated successfully.');
                 if (currentUser && currentUser.id === parseInt(userId)) {
-                    setUser(result.user);
+                    setUser(result.user.data || result.user);
                     showLayout();
                 }
             } else {

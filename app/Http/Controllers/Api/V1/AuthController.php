@@ -41,6 +41,7 @@ class AuthController extends Controller
             ]);
         }
 
+        $user->tokens()->delete();
         $token = $user->createToken('auth-token')->plainTextToken;
 
         return response()->json([
@@ -70,16 +71,10 @@ class AuthController extends Controller
 
     public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
     {
-        $status = Password::sendResetLink($request->only('email'));
-
-        if ($status !== Password::RESET_LINK_SENT) {
-            throw ValidationException::withMessages([
-                'email' => [__($status)],
-            ]);
-        }
+        Password::sendResetLink($request->only('email'));
 
         return response()->json([
-            'message' => __($status),
+            'message' => 'If an account exists with that email, we have sent a password reset link.',
         ]);
     }
 
