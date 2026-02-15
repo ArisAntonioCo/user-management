@@ -3,11 +3,7 @@
 @section('page', 'users.index')
 
 @section('content')
-<x-page-header :breadcrumbs="[['label' => 'Users']]">
-    <x-slot:actions>
-        <x-button tag="a" href="{{ route('users.create') }}" id="create-btn" class="d-none">Create User</x-button>
-    </x-slot:actions>
-</x-page-header>
+<x-page-header :breadcrumbs="[['label' => 'Users']]" />
 
 <div class="page-body">
     <div id="error-container"></div>

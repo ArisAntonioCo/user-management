@@ -14,11 +14,6 @@ export function init() {
         return;
     }
 
-    const user = getUser();
-    if (user && user.role === 'admin') {
-        document.getElementById('create-btn').classList.remove('d-none');
-    }
-
     deleteModal = new bootstrap.Modal(document.getElementById('delete-modal'));
 
     document.getElementById('delete-modal-confirm').addEventListener('click', confirmDelete);
@@ -85,7 +80,15 @@ async function loadUsers(page) {
         const meta = data.meta;
         const currentUser = getUser();
 
+        const isAdmin = currentUser && currentUser.role === 'admin';
+
+        const total = meta ? meta.total : users.length;
+
         let html = `
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <span style="font-size: 0.875rem; color: #6b7280;">Users (${total})</span>
+                ${isAdmin ? '<a href="/users/create" class="btn btn-sm btn-primary">Create User</a>' : ''}
+            </div>
             <div class="dt-container">
                 <div class="dt-search">
                     <i class="bi bi-search dt-search-icon"></i>
@@ -95,10 +98,10 @@ async function loadUsers(page) {
                     <table class="dt-table">
                         <thead>
                             <tr class="dt-header">
-                                <th><div class="dt-header-content"><span>Name</span><i class="bi bi-arrow-down-up dt-sort-icon"></i></div></th>
-                                <th><div class="dt-header-content"><span>Email</span><i class="bi bi-arrow-down-up dt-sort-icon"></i></div></th>
+                                <th><div class="dt-header-content"><span>Name</span></div></th>
+                                <th><div class="dt-header-content"><span>Email</span></div></th>
                                 <th><div class="dt-header-content"><span>Role</span></div></th>
-                                <th><div class="dt-header-content"><span>Created</span><i class="bi bi-arrow-down-up dt-sort-icon"></i></div></th>
+                                <th><div class="dt-header-content"><span>Created</span></div></th>
                                 ${currentUser && currentUser.role === 'admin' ? '<th><div class="dt-header-content"><span>Actions</span></div></th>' : ''}
                             </tr>
                         </thead>

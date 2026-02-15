@@ -173,10 +173,10 @@ body {
 
 /* DataTable styles — matches design system 10-table-reference.md */
 
-/* Container: rounded-sm border bg-card */
+/* Container: rounded border bg-card */
 .dt-container {
     border: 1px solid #e5e7eb;
-    border-radius: 0.125rem;
+    border-radius: 0.25rem;
     background: white;
     overflow: hidden;
 }
