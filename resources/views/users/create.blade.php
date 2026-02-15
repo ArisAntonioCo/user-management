@@ -5,7 +5,7 @@
 @section('content')
 <x-page-header :breadcrumbs="[['label' => 'Users', 'url' => route('users.index')], ['label' => 'Create User']]" />
 
-<div class="p-3">
+<div class="page-body">
     <div class="row justify-content-center">
         <div class="col-lg-6">
             <x-card>

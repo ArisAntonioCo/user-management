@@ -16,14 +16,16 @@ export async function init() {
         setUser(user);
         showLayout();
 
+        const buttonLabel = user.role === 'admin' ? 'Manage Users' : 'Show Users';
+
         document.getElementById('dashboard-content').innerHTML = `
-            <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: calc(100vh - 200px);">
-                <h1 style="font-size: 2rem; font-weight: 600; margin-bottom: 1rem;">Welcome back, ${escapeHtml(user.name)}</h1>
+            <div class="d-flex flex-column align-items-center justify-content-center flex-grow-1">
+                <h1 class="mb-3" style="font-size: 2rem; font-weight: 600;">Welcome back, ${escapeHtml(user.name)}</h1>
                 <div class="d-flex gap-2 mb-3">
                     <span class="badge bg-secondary">${escapeHtml(user.email)}</span>
                     <span class="badge bg-primary text-capitalize">${escapeHtml(user.role)}</span>
                 </div>
-                <a href="/users" class="btn btn-sm btn-dark">${user.role === 'admin' ? 'Manage Users' : 'Show Users'}</a>
+                <a href="/users" class="btn btn-sm btn-dark">${buttonLabel}</a>
             </div>
         `;
     } catch (error) {

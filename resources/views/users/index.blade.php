@@ -9,7 +9,7 @@
     </x-slot:actions>
 </x-page-header>
 
-<div class="p-3">
+<div class="page-body">
     <div id="error-container"></div>
 
     <x-modal
