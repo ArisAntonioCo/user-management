@@ -3,8 +3,10 @@ import { apiRequest } from '../../api/client';
 import { showErrors, showSuccess, escapeHtml } from '../../utils/ui';
 
 let currentPage = 1;
+let currentSearch = '';
 let deleteUserId = null;
 let deleteModal = null;
+let searchTimeout = null;
 
 export function init() {
     if (!isAuthenticated()) {
@@ -29,6 +31,16 @@ export function init() {
         }
     });
 
+    document.getElementById('users-table').addEventListener('input', function (e) {
+        if (e.target.id === 'dt-search-input') {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentSearch = e.target.value.trim();
+                loadUsers(1);
+            }, 300);
+        }
+    });
+
     document.getElementById('pagination').addEventListener('click', function (e) {
         const pageBtn = e.target.closest('[data-page]');
         if (pageBtn) {
@@ -36,14 +48,38 @@ export function init() {
         }
     });
 
-    loadUsers(1);
+    // Read initial state from URL params
+    const params = new URLSearchParams(window.location.search);
+    currentPage = parseInt(params.get('page')) || 1;
+    currentSearch = params.get('search') || '';
+
+    loadUsers(currentPage);
+}
+
+function updateUrl() {
+    const params = new URLSearchParams();
+    if (currentSearch) {
+        params.set('search', currentSearch);
+    }
+    if (currentPage > 1) {
+        params.set('page', currentPage);
+    }
+    const query = params.toString();
+    const url = window.location.pathname + (query ? `?${query}` : '');
+    window.history.replaceState(null, '', url);
 }
 
 async function loadUsers(page) {
     currentPage = page;
+    updateUrl();
 
     try {
-        const response = await apiRequest(`/users?page=${page}`);
+        const params = new URLSearchParams({ page });
+        if (currentSearch) {
+            params.set('search', currentSearch);
+        }
+
+        const response = await apiRequest(`/users?${params}`);
         const data = await response.json();
         const users = data.data;
         const meta = data.meta;
@@ -53,7 +89,7 @@ async function loadUsers(page) {
             <div class="dt-container">
                 <div class="dt-search">
                     <i class="bi bi-search dt-search-icon"></i>
-                    <input type="text" id="dt-search-input" placeholder="Search users..." />
+                    <input type="text" id="dt-search-input" placeholder="Search users..." value="${escapeHtml(currentSearch)}" />
                 </div>
                 <div style="overflow-x: auto;">
                     <table class="dt-table">
@@ -67,6 +103,11 @@ async function loadUsers(page) {
                             </tr>
                         </thead>
                         <tbody>`;
+
+        if (users.length === 0) {
+            const colspan = currentUser && currentUser.role === 'admin' ? 5 : 4;
+            html += `<tr class="dt-row"><td colspan="${colspan}" class="text-center dt-muted" style="padding: 2rem;">No users found.</td></tr>`;
+        }
 
         users.forEach(user => {
             const initials = escapeHtml(user.name).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
@@ -99,6 +140,13 @@ async function loadUsers(page) {
         html += `</tbody></table></div></div>`;
         document.getElementById('users-table').innerHTML = html;
 
+        // Restore focus to search input after re-render
+        const searchInput = document.getElementById('dt-search-input');
+        if (searchInput && currentSearch) {
+            searchInput.focus();
+            searchInput.setSelectionRange(searchInput.value.length, searchInput.value.length);
+        }
+
         if (meta && meta.last_page > 1) {
             let paginationHtml = '';
             for (let i = 1; i <= meta.last_page; i++) {
@@ -106,6 +154,8 @@ async function loadUsers(page) {
                     class="btn btn-sm ${i === currentPage ? 'btn-primary' : 'btn-outline-secondary'}">${i}</button>`;
             }
             document.getElementById('pagination').innerHTML = paginationHtml;
+        } else {
+            document.getElementById('pagination').innerHTML = '';
         }
     } catch (error) {
         document.getElementById('users-table').innerHTML = '<div class="alert alert-danger">Failed to load users.</div>';
