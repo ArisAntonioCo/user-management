@@ -1,11 +1,13 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "user-management/app",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "A secure, API-driven User Management system built with Laravel 12 and Sanctum.",
     "keywords": [
         "laravel",
-        "framework"
+        "user-management",
+        "sanctum",
+        "api"
     ],
     "license": "MIT",
     "require": {

@@ -30,17 +30,14 @@ composer install
 # 3. Copy environment file
 cp .env.example .env
 
-# 4. Generate application key
-php artisan key:generate
-
-# 5. Start Docker containers
+# 4. Start Docker containers
 ./vendor/bin/sail up -d
 
-# 6. Run migrations and seed the database
+# 5. Run migrations and seed the database
 ./vendor/bin/sail artisan migrate
 ./vendor/bin/sail artisan db:seed
 
-# 7. Install frontend dependencies and build
+# 6. Install frontend dependencies and build
 ./vendor/bin/sail shell
 pnpm install
 pnpm run build
