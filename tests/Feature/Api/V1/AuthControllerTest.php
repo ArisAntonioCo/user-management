@@ -1,7 +1,12 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Support\Facades\Password;
+
+beforeEach(function () {
+    $this->withoutMiddleware(ThrottleRequests::class);
+});
 
 // Registration
 test('user can register with valid data', function () {
