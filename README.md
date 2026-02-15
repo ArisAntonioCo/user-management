@@ -27,8 +27,9 @@ cd user-management
 # 2. Install PHP dependencies
 composer install
 
-# 3. Copy environment file
+# 3. Copy environment file and generate app key
 cp .env.example .env
+php artisan key:generate
 
 # 4. Start Docker containers
 ./vendor/bin/sail up -d
