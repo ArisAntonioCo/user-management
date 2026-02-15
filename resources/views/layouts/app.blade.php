@@ -10,30 +10,22 @@
 </head>
 <body data-page="@yield('page')" @stack('body-attrs')>
     {{-- Sidebar (hidden by default, shown by JS for authenticated pages) --}}
-    <nav id="app-sidebar" class="d-none d-flex flex-column bg-white border-end position-fixed top-0 start-0 vh-100" style="width: 250px; z-index: 1030;">
-        <div class="d-flex align-items-center px-3 border-bottom" style="height: 56px;">
-            <a href="{{ route('dashboard') }}" class="fw-bold text-dark text-decoration-none fs-5">User Management</a>
+    <nav id="app-sidebar" class="d-none app-sidebar">
+        <div class="app-sidebar-header">
+            <a href="{{ route('dashboard') }}">User Management</a>
         </div>
 
-        <ul class="nav flex-column p-3 flex-grow-1">
-            <li class="nav-item">
-                <a href="{{ route('dashboard') }}" id="nav-link-dashboard" class="nav-link rounded d-flex align-items-center gap-2">
-                    <i class="bi bi-house-door"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ route('users.index') }}" id="nav-link-users" class="nav-link rounded d-flex align-items-center gap-2">
-                    <i class="bi bi-people"></i> Users
-                </a>
-            </li>
+        <ul class="nav flex-column app-sidebar-nav">
+            <x-sidebar-link href="{{ route('dashboard') }}" icon="house-door" id="nav-link-dashboard">Dashboard</x-sidebar-link>
+            <x-sidebar-link href="{{ route('users.index') }}" icon="people" id="nav-link-users">Users</x-sidebar-link>
         </ul>
 
-        <div class="border-top p-3">
-            <div class="d-flex align-items-center gap-2">
-                <div id="nav-user-avatar" class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px; font-size: 14px;"></div>
-                <div class="flex-grow-1 overflow-hidden">
-                    <div id="nav-user-name" class="fw-medium small text-truncate"></div>
-                    <div id="nav-user-role" class="text-muted text-capitalize" style="font-size: 12px;"></div>
+        <div class="app-sidebar-footer">
+            <div class="app-sidebar-user">
+                <div id="nav-user-avatar" class="app-sidebar-avatar"></div>
+                <div class="app-sidebar-user-info">
+                    <div id="nav-user-name" class="app-sidebar-user-name"></div>
+                    <div id="nav-user-role" class="app-sidebar-user-role"></div>
                 </div>
                 <button id="logout-btn" class="btn btn-sm btn-outline-danger" title="Logout">
                     <i class="bi bi-box-arrow-right"></i>
@@ -50,7 +42,7 @@
     {{-- Mobile Overlay --}}
     <div id="sidebar-overlay" class="position-fixed top-0 start-0 w-100 vh-100 d-none" style="background: rgba(0,0,0,0.5); z-index: 1020;"></div>
 
-    {{-- Single content area — JS controls the styling --}}
+    {{-- Main content area — JS controls the shell structure --}}
     <main id="main-content">
         @yield('content')
     </main>

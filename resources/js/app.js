@@ -26,8 +26,7 @@ const pages = {
 function toggleSidebar() {
     const sidebar = document.getElementById('app-sidebar');
     const overlay = document.getElementById('sidebar-overlay');
-    const isHidden = sidebar.style.transform === 'translateX(-100%)';
-    sidebar.style.transform = isHidden ? 'translateX(0)' : 'translateX(-100%)';
+    sidebar.classList.toggle('show');
     overlay.classList.toggle('d-none');
 }
 

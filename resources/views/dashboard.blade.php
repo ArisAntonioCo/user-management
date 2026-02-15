@@ -3,9 +3,11 @@
 @section('page', 'dashboard')
 
 @section('content')
-<x-card title="Dashboard">
+<x-page-header :breadcrumbs="[['label' => 'Dashboard']]" />
+
+<div class="p-3">
     <div id="dashboard-content">
         <p class="text-muted">Loading...</p>
     </div>
-</x-card>
+</div>
 @endsection

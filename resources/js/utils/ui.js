@@ -48,11 +48,25 @@ export function showLayout() {
     }
 
     if (isAuthenticated()) {
-        // Authenticated layout: show sidebar, offset content
+        // Authenticated layout: app shell with floating card
         const sidebar = document.getElementById('app-sidebar');
         sidebar.classList.remove('d-none');
-        mainContent.style.marginLeft = '250px';
-        mainContent.classList.add('py-4', 'px-4');
+
+        // Wrap main in the app-shell structure
+        document.body.classList.add('app-shell');
+
+        // Create the inset wrapper around main
+        const inset = document.createElement('div');
+        inset.className = 'app-inset';
+        mainContent.parentNode.insertBefore(inset, mainContent);
+        inset.appendChild(mainContent);
+        mainContent.classList.add('app-main');
+
+        // Show mobile toggle on small screens
+        const toggle = document.getElementById('sidebar-toggle');
+        if (toggle && window.innerWidth < 768) {
+            toggle.classList.remove('d-none');
+        }
 
         const user = getUser();
         if (user) {
@@ -80,7 +94,7 @@ function highlightActiveLink(page) {
     if (activeLinkId) {
         const link = document.getElementById(activeLinkId);
         if (link) {
-            link.classList.add('active', 'bg-primary', 'text-white');
+            link.classList.add('active');
         }
     }
 }

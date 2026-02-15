@@ -50,36 +50,45 @@ async function loadUsers(page) {
         const currentUser = getUser();
 
         let html = `
-            <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Created</th>
-                            ${currentUser && currentUser.role === 'admin' ? '<th>Actions</th>' : ''}
-                        </tr>
-                    </thead>
-                    <tbody>`;
+            <div class="dt-container">
+                <div class="dt-search">
+                    <i class="bi bi-search dt-search-icon"></i>
+                    <input type="text" id="dt-search-input" placeholder="Search users..." />
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="dt-table">
+                        <thead>
+                            <tr class="dt-header">
+                                <th><div class="dt-header-content"><span>Name</span><i class="bi bi-arrow-down-up dt-sort-icon"></i></div></th>
+                                <th><div class="dt-header-content"><span>Email</span><i class="bi bi-arrow-down-up dt-sort-icon"></i></div></th>
+                                <th><div class="dt-header-content"><span>Role</span></div></th>
+                                <th><div class="dt-header-content"><span>Created</span><i class="bi bi-arrow-down-up dt-sort-icon"></i></div></th>
+                                ${currentUser && currentUser.role === 'admin' ? '<th><div class="dt-header-content"><span>Actions</span></div></th>' : ''}
+                            </tr>
+                        </thead>
+                        <tbody>`;
 
         users.forEach(user => {
+            const initials = escapeHtml(user.name).split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
             html += `
-                <tr>
-                    <td>${user.id}</td>
-                    <td>${escapeHtml(user.name)}</td>
-                    <td class="text-muted">${escapeHtml(user.email)}</td>
+                <tr class="dt-row">
+                    <td>
+                        <div class="dt-name-cell">
+                            <div class="dt-avatar">${initials}</div>
+                            <span class="dt-name">${escapeHtml(user.name)}</span>
+                        </div>
+                    </td>
+                    <td class="dt-muted">${escapeHtml(user.email)}</td>
                     <td>
                         <span class="badge ${user.role === 'admin' ? 'bg-primary' : 'bg-secondary'}">${escapeHtml(user.role)}</span>
                     </td>
-                    <td class="text-muted">${new Date(user.created_at).toLocaleDateString()}</td>`;
+                    <td class="dt-muted">${new Date(user.created_at).toLocaleDateString()}</td>`;
 
             if (currentUser && currentUser.role === 'admin') {
                 html += `<td>
-                    <a href="/users/${user.id}/edit" class="btn btn-sm btn-outline-primary me-1">Edit</a>`;
+                    <a href="/users/${user.id}/edit" class="dt-action-btn dt-action-btn-edit me-1">Edit</a>`;
                 if (user.id !== currentUser.id) {
-                    html += `<button data-delete-user="${user.id}" class="btn btn-sm btn-outline-danger">Delete</button>`;
+                    html += `<button data-delete-user="${user.id}" class="dt-action-btn dt-action-btn-delete">Delete</button>`;
                 }
                 html += `</td>`;
             }
@@ -87,7 +96,7 @@ async function loadUsers(page) {
             html += `</tr>`;
         });
 
-        html += `</tbody></table></div>`;
+        html += `</tbody></table></div></div>`;
         document.getElementById('users-table').innerHTML = html;
 
         if (meta && meta.last_page > 1) {

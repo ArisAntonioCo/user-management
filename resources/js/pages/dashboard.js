@@ -17,34 +17,13 @@ export async function init() {
         showLayout();
 
         document.getElementById('dashboard-content').innerHTML = `
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <h6 class="text-primary text-uppercase small fw-semibold">Welcome</h6>
-                            <p class="fs-4 fw-bold mb-0">${escapeHtml(user.name)}</p>
-                        </div>
-                    </div>
+            <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: calc(100vh - 200px);">
+                <h1 style="font-size: 2rem; font-weight: 600; margin-bottom: 1rem;">Welcome back, ${escapeHtml(user.name)}</h1>
+                <div class="d-flex gap-2 mb-3">
+                    <span class="badge bg-secondary">${escapeHtml(user.email)}</span>
+                    <span class="badge bg-primary text-capitalize">${escapeHtml(user.role)}</span>
                 </div>
-                <div class="col-md-4">
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <h6 class="text-success text-uppercase small fw-semibold">Email</h6>
-                            <p class="fs-5 mb-0">${escapeHtml(user.email)}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <h6 class="text-purple text-uppercase small fw-semibold">Role</h6>
-                            <p class="fs-5 mb-0 text-capitalize">${escapeHtml(user.role)}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-4">
-                <a href="/users" class="btn btn-primary">Manage Users</a>
+                <a href="/users" class="btn btn-sm btn-dark">${user.role === 'admin' ? 'Manage Users' : 'Show Users'}</a>
             </div>
         `;
     } catch (error) {

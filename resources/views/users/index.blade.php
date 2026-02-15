@@ -3,12 +3,13 @@
 @section('page', 'users.index')
 
 @section('content')
-<x-card>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="card-title fw-bold fs-4 mb-0">Users</h5>
+<x-page-header :breadcrumbs="[['label' => 'Users']]">
+    <x-slot:actions>
         <x-button tag="a" href="{{ route('users.create') }}" id="create-btn" class="d-none">Create User</x-button>
-    </div>
+    </x-slot:actions>
+</x-page-header>
 
+<div class="p-3">
     <div id="error-container"></div>
 
     <x-modal
@@ -23,5 +24,5 @@
     </div>
 
     <nav id="pagination" class="d-flex justify-content-center gap-2 mt-3"></nav>
-</x-card>
+</div>
 @endsection
