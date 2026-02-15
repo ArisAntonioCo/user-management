@@ -1,2 +1,22 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import 'tailwindcss';
+
+@font-face {
+    font-family: 'FK Grotesk';
+    src: url('../fonts/FKGroteskTrial-Regular.otf') format('opentype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'FK Grotesk';
+    src: url('../fonts/FKGroteskTrial-Medium.otf') format('opentype');
+    font-weight: 500;
+}
+
+body {
+    font-family: 'FK Grotesk', sans-serif;
+}
+
+.badge {
+    font-weight: 400;
+}
