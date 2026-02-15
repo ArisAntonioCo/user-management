@@ -500,6 +500,7 @@ Authorization: Bearer {token}
 - Sensitive fields hidden from API responses (`password`, `remember_token`)
 - API rate limiting (60 req/min general, 5 req/min for auth endpoints)
 - Structured JSON error handling for all API responses
+- Production-ready configuration (`APP_DEBUG=false`, `APP_ENV=production`)
 
 ## Authorization Rules
 
@@ -510,6 +511,17 @@ Authorization: Bearer {token}
 | Create user | Yes | No |
 | Update user | Yes | Self only |
 | Delete user | Yes (not self) | No |
+
+## Production Configuration
+
+For production deployment, update your `.env`:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+```
+
+This disables debug mode and prevents stack traces or internal errors from being exposed to end users. All API errors will still return structured JSON responses.
 
 ## Common Commands
 
@@ -547,3 +559,22 @@ exit
 vendor/bin/pint
 exit
 ```
+
+## API Documentation (Swagger/OpenAPI)
+
+Interactive API documentation is auto-generated using [Scramble](https://scramble.dedoc.co). After starting the application:
+
+- **Swagger UI:** http://localhost/docs/api
+- **OpenAPI JSON:** http://localhost/docs/api.json
+
+The docs are auto-generated from your Form Requests, API Resources, and controller return types. Available in local environment only.
+
+## CI/CD
+
+GitHub Actions CI pipeline is configured at `.github/workflows/ci.yml`. On every push and PR to `main`, it runs:
+
+1. Code style check (Pint)
+2. Database migrations
+3. Full test suite (Pest)
+
+Services: PostgreSQL 18 + Redis.
