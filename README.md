@@ -7,7 +7,7 @@ A secure, API-driven User Management system built with Laravel 12 and Sanctum. F
 - **Backend:** PHP 8.5, Laravel 12, Laravel Sanctum 4
 - **Database:** PostgreSQL 18
 - **Cache/Queue:** Redis
-- **Frontend:** Blade templates, Bootstrap 5, Tailwind CSS 4, vanilla JS
+- **Frontend:** Blade templates, Bootstrap 5, Tailwind CSS 4, Axios
 - **Testing:** Pest 4
 - **Containerization:** Docker via Laravel Sail
 
