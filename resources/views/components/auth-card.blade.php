@@ -1,19 +1,21 @@
 @props(['title', 'description' => null])
 
-<div class="bg-white rounded-lg shadow p-8">
-    <h2 class="text-2xl font-bold text-center mb-6">{{ $title }}</h2>
+<div class="card shadow-sm">
+    <div class="card-body p-4">
+        <h4 class="card-title fw-bold text-center mb-4">{{ $title }}</h4>
 
-    @if ($description)
-        <p class="text-sm text-gray-600 mb-4 text-center">{{ $description }}</p>
-    @endif
+        @if ($description)
+            <p class="text-muted text-center small mb-3">{{ $description }}</p>
+        @endif
 
-    <div id="error-container"></div>
+        <div id="error-container"></div>
 
-    {{ $slot }}
+        {{ $slot }}
 
-    @if (isset($footer))
-        <div class="mt-4 text-center text-sm">
-            {{ $footer }}
-        </div>
-    @endif
+        @if (isset($footer))
+            <div class="mt-3 text-center small">
+                {{ $footer }}
+            </div>
+        @endif
+    </div>
 </div>

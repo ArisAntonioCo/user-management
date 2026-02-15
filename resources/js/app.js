@@ -23,15 +23,13 @@ const pages = {
     'users.edit': usersEditPage,
 };
 
-window.handleLogout = async function () {
-    try {
-        await apiRequest('/logout', { method: 'POST' });
-    } catch (e) {
-        // Ignore errors
-    }
-    removeToken();
-    window.location.href = '/login';
-};
+function toggleSidebar() {
+    const sidebar = document.getElementById('app-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const isHidden = sidebar.style.transform === 'translateX(-100%)';
+    sidebar.style.transform = isHidden ? 'translateX(0)' : 'translateX(-100%)';
+    overlay.classList.toggle('d-none');
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     showLayout();
@@ -39,5 +37,28 @@ document.addEventListener('DOMContentLoaded', function () {
     const page = document.body.dataset.page;
     if (page && pages[page]) {
         pages[page].init();
+    }
+
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async function () {
+            try {
+                await apiRequest('/logout', { method: 'POST' });
+            } catch (e) {
+                // Ignore errors
+            }
+            removeToken();
+            window.location.href = '/login';
+        });
+    }
+
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', toggleSidebar);
+    }
+
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', toggleSidebar);
     }
 });

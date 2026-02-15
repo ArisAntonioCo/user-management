@@ -4,9 +4,9 @@
 
 @section('content')
 <x-card>
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">Users</h1>
-        <x-button tag="a" href="{{ route('users.create') }}" id="create-btn" class="hidden">Create User</x-button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="card-title fw-bold fs-4 mb-0">Users</h5>
+        <x-button tag="a" href="{{ route('users.create') }}" id="create-btn" class="d-none">Create User</x-button>
     </div>
 
     <div id="error-container"></div>
@@ -16,14 +16,12 @@
         title="Confirm Delete"
         message="Are you sure you want to delete this user? This action cannot be undone."
         confirmText="Delete"
-        confirmAction="confirmDelete()"
-        cancelAction="closeDeleteModal()"
     />
 
     <div id="users-table">
-        <p class="text-gray-500">Loading...</p>
+        <p class="text-muted">Loading...</p>
     </div>
 
-    <div id="pagination" class="mt-4 flex justify-center gap-2"></div>
+    <nav id="pagination" class="d-flex justify-content-center gap-2 mt-3"></nav>
 </x-card>
 @endsection

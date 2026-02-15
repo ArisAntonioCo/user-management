@@ -17,28 +17,38 @@ export async function init() {
         showLayout();
 
         document.getElementById('dashboard-content').innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-blue-50 rounded-lg p-6">
-                    <h3 class="text-sm font-medium text-blue-600 uppercase">Welcome</h3>
-                    <p class="text-2xl font-bold text-gray-800 mt-2">${user.name}</p>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6 class="text-primary text-uppercase small fw-semibold">Welcome</h6>
+                            <p class="fs-4 fw-bold mb-0">${user.name}</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-green-50 rounded-lg p-6">
-                    <h3 class="text-sm font-medium text-green-600 uppercase">Email</h3>
-                    <p class="text-lg text-gray-800 mt-2">${user.email}</p>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6 class="text-success text-uppercase small fw-semibold">Email</h6>
+                            <p class="fs-5 mb-0">${user.email}</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-purple-50 rounded-lg p-6">
-                    <h3 class="text-sm font-medium text-purple-600 uppercase">Role</h3>
-                    <p class="text-lg text-gray-800 mt-2 capitalize">${user.role}</p>
+                <div class="col-md-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h6 class="text-purple text-uppercase small fw-semibold">Role</h6>
+                            <p class="fs-5 mb-0 text-capitalize">${user.role}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="mt-6">
-                <a href="/users" class="inline-block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition">
-                    Manage Users
-                </a>
+            <div class="mt-4">
+                <a href="/users" class="btn btn-primary">Manage Users</a>
             </div>
         `;
     } catch (error) {
         document.getElementById('dashboard-content').innerHTML =
-            '<p class="text-red-500">Failed to load dashboard data.</p>';
+            '<div class="alert alert-danger">Failed to load dashboard data.</div>';
     }
 }

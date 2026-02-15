@@ -3,18 +3,18 @@
 @section('page', 'auth.login')
 
 @section('content')
-<x-auth-card title="Login">
-    <form id="login-form" class="space-y-4">
-        <x-form-input label="Email" type="email" id="email" :required="true" />
-        <x-form-input label="Password" type="password" id="password" :required="true" />
-        <x-button class="w-full">Login</x-button>
-    </form>
+<div style="width: 100%; max-width: 420px;" class="px-3">
+    <x-auth-card title="Login">
+        <form id="login-form">
+            <x-form-input label="Email" type="email" id="email" :required="true" />
+            <x-form-input label="Password" type="password" id="password" :required="true" />
+            <x-button class="w-100">Login</x-button>
+        </form>
 
-    <x-slot:footer>
-        <div class="space-y-2">
-            <p><a href="{{ route('password.request') }}" class="text-blue-600 hover:underline">Forgot your password?</a></p>
-            <p>Don't have an account? <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Register</a></p>
-        </div>
-    </x-slot:footer>
-</x-auth-card>
+        <x-slot:footer>
+            <p class="mb-1"><a href="{{ route('password.request') }}">Forgot your password?</a></p>
+            <p class="mb-0">Don't have an account? <a href="{{ route('register') }}">Register</a></p>
+        </x-slot:footer>
+    </x-auth-card>
+</div>
 @endsection

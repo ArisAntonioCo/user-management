@@ -1,9 +1,11 @@
 @props(['title' => null])
 
-<div class="bg-white rounded-lg shadow p-6">
-    @if ($title)
-        <h1 class="text-2xl font-bold mb-4">{{ $title }}</h1>
-    @endif
+<div class="card">
+    <div class="card-body">
+        @if ($title)
+            <h5 class="card-title fw-bold fs-4 mb-3">{{ $title }}</h5>
+        @endif
 
-    {{ $slot }}
+        {{ $slot }}
+    </div>
 </div>

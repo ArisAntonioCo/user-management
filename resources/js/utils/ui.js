@@ -7,10 +7,10 @@ export function showErrors(errors, containerId = 'error-container') {
     }
 
     if (typeof errors === 'string') {
-        container.innerHTML = `<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">${errors}</div>`;
+        container.innerHTML = `<div class="alert alert-danger">${errors}</div>`;
     } else if (typeof errors === 'object') {
         const messages = Object.values(errors).flat().join('<br>');
-        container.innerHTML = `<div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">${messages}</div>`;
+        container.innerHTML = `<div class="alert alert-danger">${messages}</div>`;
     }
 }
 
@@ -20,7 +20,7 @@ export function showSuccess(message, containerId = 'error-container') {
         return;
     }
 
-    container.innerHTML = `<div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4">${message}</div>`;
+    container.innerHTML = `<div class="alert alert-success">${message}</div>`;
 }
 
 export function clearMessages(containerId = 'error-container') {
@@ -33,15 +33,20 @@ export function clearMessages(containerId = 'error-container') {
 export function showLayout() {
     const page = document.body.dataset.page;
     const guestPages = ['auth.login', 'auth.register', 'auth.forgot-password', 'auth.reset-password'];
+    const mainContent = document.getElementById('main-content');
 
     if (guestPages.includes(page)) {
-        document.getElementById('guest-layout').classList.remove('hidden');
+        // Guest layout: centered card
+        mainContent.classList.add('min-vh-100', 'd-flex', 'align-items-center', 'justify-content-center', 'py-5');
         return;
     }
 
     if (isAuthenticated()) {
-        const layout = document.getElementById('app-layout');
-        layout.classList.remove('hidden');
+        // Authenticated layout: show sidebar, offset content
+        const sidebar = document.getElementById('app-sidebar');
+        sidebar.classList.remove('d-none');
+        mainContent.style.marginLeft = '250px';
+        mainContent.classList.add('py-4', 'px-4');
 
         const user = getUser();
         if (user) {
@@ -54,18 +59,11 @@ export function showLayout() {
             if (avatarEl) avatarEl.textContent = user.name.charAt(0).toUpperCase();
         }
 
-        // Show mobile toggle
-        document.getElementById('sidebar-toggle').classList.remove('hidden');
-
-        // Highlight active sidebar link
         highlightActiveLink(page);
     }
 }
 
 function highlightActiveLink(page) {
-    const activeClasses = ['bg-blue-50', 'text-blue-700'];
-    const inactiveClasses = ['text-gray-600', 'hover:bg-gray-50', 'hover:text-gray-900'];
-
     let activeLinkId = null;
     if (page === 'dashboard') {
         activeLinkId = 'nav-link-dashboard';
@@ -76,8 +74,7 @@ function highlightActiveLink(page) {
     if (activeLinkId) {
         const link = document.getElementById(activeLinkId);
         if (link) {
-            inactiveClasses.forEach(cls => link.classList.remove(cls));
-            activeClasses.forEach(cls => link.classList.add(cls));
+            link.classList.add('active', 'bg-primary', 'text-white');
         }
     }
 }

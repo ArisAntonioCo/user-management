@@ -1,12 +1,19 @@
-@props(['id', 'title', 'message', 'confirmText' => 'Confirm', 'confirmAction', 'cancelAction'])
+@props(['id', 'title', 'message', 'confirmText' => 'Confirm'])
 
-<div id="{{ $id }}" class="fixed inset-0 bg-black/50 items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-lg p-6 max-w-sm mx-auto">
-        <h3 class="text-lg font-bold mb-2">{{ $title }}</h3>
-        <p class="text-gray-600 mb-4">{{ $message }}</p>
-        <div class="flex justify-end gap-3">
-            <x-button variant="secondary" type="button" onclick="{{ $cancelAction }}">Cancel</x-button>
-            <x-button variant="danger" type="button" onclick="{{ $confirmAction }}">{{ $confirmText }}</x-button>
+<div id="{{ $id }}" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">{{ $title }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">{{ $message }}</p>
+            </div>
+            <div class="modal-footer">
+                <x-button variant="secondary" type="button" data-bs-dismiss="modal">Cancel</x-button>
+                <x-button variant="danger" type="button" id="{{ $id }}-confirm">{{ $confirmText }}</x-button>
+            </div>
         </div>
     </div>
 </div>
