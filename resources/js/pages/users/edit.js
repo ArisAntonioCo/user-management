@@ -1,6 +1,6 @@
 import { isAuthenticated, getUser, setUser } from '../../services/auth';
 import { apiRequest } from '../../api/client';
-import { showErrors, showSuccess, showNav, clearMessages } from '../../utils/ui';
+import { showErrors, showSuccess, showLayout, clearMessages } from '../../utils/ui';
 
 export async function init() {
     if (!isAuthenticated()) {
@@ -63,7 +63,7 @@ export async function init() {
                 showSuccess('User updated successfully.');
                 if (currentUser && currentUser.id === parseInt(userId)) {
                     setUser(result.user);
-                    showNav();
+                    showLayout();
                 }
             } else {
                 showErrors(result.errors || result.message);

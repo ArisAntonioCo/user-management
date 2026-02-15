@@ -1,6 +1,6 @@
 import { isAuthenticated, setUser } from '../services/auth';
 import { apiRequest } from '../api/client';
-import { showNav } from '../utils/ui';
+import { showLayout } from '../utils/ui';
 
 export async function init() {
     if (!isAuthenticated()) {
@@ -14,7 +14,7 @@ export async function init() {
         const user = data.data || data;
 
         setUser(user);
-        showNav();
+        showLayout();
 
         document.getElementById('dashboard-content').innerHTML = `
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -1,7 +1,7 @@
 import './bootstrap';
 import { isAuthenticated, getUser, removeToken } from './services/auth';
 import { apiRequest } from './api/client';
-import { showNav } from './utils/ui';
+import { showLayout } from './utils/ui';
 
 import * as loginPage from './pages/auth/login';
 import * as registerPage from './pages/auth/register';
@@ -34,7 +34,7 @@ window.handleLogout = async function () {
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-    showNav();
+    showLayout();
 
     const page = document.body.dataset.page;
     if (page && pages[page]) {
