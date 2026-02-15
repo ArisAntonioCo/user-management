@@ -11,27 +11,14 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct(public string $token)
-    {
-        //
-    }
+    public function __construct(public string $token) {}
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
+    /** @return array<int, string> */
     public function via(object $notifiable): array
     {
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
     public function toMail(object $notifiable): MailMessage
     {
         $url = url('/reset-password?token='.$this->token.'&email='.$notifiable->getEmailForPasswordReset());

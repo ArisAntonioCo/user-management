@@ -13,17 +13,11 @@ use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
-    /**
-     * Display a paginated listing of users.
-     */
     public function index(): AnonymousResourceCollection
     {
         return UserResource::collection(User::paginate(15));
     }
 
-    /**
-     * Store a newly created user.
-     */
     public function store(StoreUserRequest $request): JsonResponse
     {
         $user = User::create($request->validated());
@@ -34,17 +28,11 @@ class UserController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified user.
-     */
     public function show(User $user): UserResource
     {
         return new UserResource($user);
     }
 
-    /**
-     * Update the specified user.
-     */
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
         $user->update($request->validated());
@@ -55,9 +43,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified user.
-     */
     public function destroy(User $user): JsonResponse
     {
         Gate::authorize('delete', $user);

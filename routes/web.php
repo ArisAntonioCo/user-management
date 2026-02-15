@@ -5,9 +5,7 @@ use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\UserViewController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+Route::redirect('/', '/login');
 
 // Auth pages (guest only)
 Route::get('/login', [AuthViewController::class, 'login'])->name('login');
