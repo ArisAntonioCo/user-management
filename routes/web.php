@@ -6,7 +6,7 @@ use App\Http\Controllers\Web\UserViewController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 // Auth pages (guest only)
