@@ -1,59 +1,552 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# User Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A secure, API-driven User Management system built with Laravel 12 and Sanctum. Features token-based authentication, role-based access control, queued email notifications, and a Blade frontend that consumes its own API.
 
-## About Laravel
+## Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Backend:** PHP 8.5, Laravel 12, Laravel Sanctum 4
+- **Database:** PostgreSQL 18
+- **Cache/Queue:** Redis
+- **Frontend:** Blade templates, Tailwind CSS 4, Axios
+- **Testing:** Pest 4
+- **Containerization:** Docker via Laravel Sail
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Prerequisites
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
+- [Composer](https://getcomposer.org/) installed
+- [Node.js](https://nodejs.org/) with pnpm (`npm install -g pnpm`)
 
-## Learning Laravel
+## Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+```bash
+# 1. Clone the repository
+git clone <repo-url> user-management
+cd user-management
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# 2. Install PHP dependencies
+composer install
 
-## Laravel Sponsors
+# 3. Copy environment file
+cp .env.example .env
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# 4. Generate application key
+php artisan key:generate
 
-### Premium Partners
+# 5. Install Sail (select: pgsql, redis, mailpit)
+php artisan sail:install
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# 6. Start Docker containers
+./vendor/bin/sail up -d
 
-## Contributing
+# 7. Run migrations and seed the database
+./vendor/bin/sail artisan migrate
+./vendor/bin/sail artisan db:seed
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# 8. Install frontend dependencies and build
+./vendor/bin/sail root-shell
+npm install -g pnpm
+exit
+./vendor/bin/sail shell
+pnpm install
+pnpm run build
+exit
+```
 
-## Code of Conduct
+The application is now running at **http://localhost**.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Environment Setup
 
-## Security Vulnerabilities
+### Database (Docker)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+DB_CONNECTION=pgsql
+DB_HOST=pgsql
+DB_PORT=5432
+DB_DATABASE=user_management
+DB_USERNAME=sail
+DB_PASSWORD=password
+```
 
-## License
+### Redis / Queue
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```env
+CACHE_STORE=redis
+QUEUE_CONNECTION=redis
+SESSION_DRIVER=redis
+REDIS_HOST=redis
+```
+
+### Mail (Gmail SMTP)
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD="your-16-char-app-password"
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=your-email@gmail.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+To get a Gmail app password: https://myaccount.google.com/apppasswords (requires 2FA enabled).
+
+### Mail (Mailpit - Local Testing)
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_FROM_ADDRESS="noreply@example.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+Mailpit inbox available at http://localhost:8025.
+
+**Important:** The queue worker must be running for emails to send:
+
+```bash
+./vendor/bin/sail artisan queue:work
+```
+
+## Default Login
+
+After seeding, an admin account is available:
+
+- **Email:** `admin@example.com`
+- **Password:** `password`
+
+## Running Tests
+
+```bash
+./vendor/bin/sail artisan test --compact
+```
+
+To run a specific test:
+
+```bash
+./vendor/bin/sail artisan test --compact --filter=testName
+```
+
+## Project Structure
+
+```
+app/
+├── Enums/
+│   └── UserRole.php                  # Admin, User roles
+├── Http/
+│   ├── Controllers/
+│   │   ├── Api/V1/
+│   │   │   ├── AuthController.php    # Auth endpoints
+│   │   │   └── UserController.php    # CRUD endpoints
+│   │   └── Web/
+│   │       ├── AuthViewController.php
+│   │       ├── DashboardController.php
+│   │       └── UserViewController.php
+│   ├── Middleware/
+│   │   └── EnsureUserIsAdmin.php
+│   ├── Requests/
+│   │   ├── Auth/                     # Login, Register, ForgotPassword, ResetPassword
+│   │   └── User/                     # StoreUser, UpdateUser
+│   └── Resources/
+│       └── UserResource.php
+├── Models/
+│   └── User.php
+├── Notifications/
+│   └── ResetPasswordNotification.php # Queued password reset email
+└── Policies/
+    └── UserPolicy.php                # RBAC authorization
+```
+
+## API Documentation
+
+Base URL: `http://localhost/api/v1`
+
+All API endpoints return JSON responses. Protected endpoints require a Bearer token in the `Authorization` header.
+
+### Authentication
+
+#### Register
+
+```
+POST /api/v1/register
+```
+
+**Request:**
+
+```json
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+}
+```
+
+**Response (201):**
+
+```json
+{
+    "message": "User registered successfully.",
+    "user": {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "role": "user",
+        "created_at": "2026-02-15T10:00:00.000000Z",
+        "updated_at": "2026-02-15T10:00:00.000000Z"
+    },
+    "token": "1|abc123..."
+}
+```
+
+#### Login
+
+```
+POST /api/v1/login
+```
+
+**Request:**
+
+```json
+{
+    "email": "admin@example.com",
+    "password": "password"
+}
+```
+
+**Response (200):**
+
+```json
+{
+    "message": "Login successful.",
+    "user": {
+        "id": 1,
+        "name": "Admin",
+        "email": "admin@example.com",
+        "role": "admin",
+        "created_at": "2026-02-15T10:00:00.000000Z",
+        "updated_at": "2026-02-15T10:00:00.000000Z"
+    },
+    "token": "2|xyz789..."
+}
+```
+
+#### Logout
+
+```
+POST /api/v1/logout
+Authorization: Bearer {token}
+```
+
+**Response (200):**
+
+```json
+{
+    "message": "Logged out successfully."
+}
+```
+
+#### Get Authenticated User
+
+```
+GET /api/v1/user
+Authorization: Bearer {token}
+```
+
+**Response (200):**
+
+```json
+{
+    "data": {
+        "id": 1,
+        "name": "Admin",
+        "email": "admin@example.com",
+        "role": "admin",
+        "created_at": "2026-02-15T10:00:00.000000Z",
+        "updated_at": "2026-02-15T10:00:00.000000Z"
+    }
+}
+```
+
+#### Forgot Password
+
+```
+POST /api/v1/forgot-password
+```
+
+**Request:**
+
+```json
+{
+    "email": "john@example.com"
+}
+```
+
+**Response (200):**
+
+```json
+{
+    "message": "We have emailed your password reset link."
+}
+```
+
+#### Reset Password
+
+```
+POST /api/v1/reset-password
+```
+
+**Request:**
+
+```json
+{
+    "token": "reset-token-from-email",
+    "email": "john@example.com",
+    "password": "newpassword123",
+    "password_confirmation": "newpassword123"
+}
+```
+
+**Response (200):**
+
+```json
+{
+    "message": "Your password has been reset."
+}
+```
+
+### User Management (Requires Authentication)
+
+All user endpoints require `Authorization: Bearer {token}` header.
+
+#### List Users (Paginated)
+
+```
+GET /api/v1/users
+Authorization: Bearer {token}
+```
+
+**Response (200):**
+
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Admin",
+            "email": "admin@example.com",
+            "role": "admin",
+            "created_at": "2026-02-15T10:00:00.000000Z",
+            "updated_at": "2026-02-15T10:00:00.000000Z"
+        }
+    ],
+    "links": {
+        "first": "http://localhost/api/v1/users?page=1",
+        "last": "http://localhost/api/v1/users?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "per_page": 15,
+        "to": 1,
+        "total": 1
+    }
+}
+```
+
+#### Get Single User
+
+```
+GET /api/v1/users/{id}
+Authorization: Bearer {token}
+```
+
+**Response (200):**
+
+```json
+{
+    "data": {
+        "id": 1,
+        "name": "Admin",
+        "email": "admin@example.com",
+        "role": "admin",
+        "created_at": "2026-02-15T10:00:00.000000Z",
+        "updated_at": "2026-02-15T10:00:00.000000Z"
+    }
+}
+```
+
+#### Create User (Admin Only)
+
+```
+POST /api/v1/users
+Authorization: Bearer {token}
+```
+
+**Request:**
+
+```json
+{
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "password": "password123",
+    "password_confirmation": "password123",
+    "role": "user"
+}
+```
+
+**Response (201):**
+
+```json
+{
+    "message": "User created successfully.",
+    "user": {
+        "id": 2,
+        "name": "Jane Doe",
+        "email": "jane@example.com",
+        "role": "user",
+        "created_at": "2026-02-15T10:00:00.000000Z",
+        "updated_at": "2026-02-15T10:00:00.000000Z"
+    }
+}
+```
+
+#### Update User (Admin or Self)
+
+```
+PUT /api/v1/users/{id}
+Authorization: Bearer {token}
+```
+
+**Request:**
+
+```json
+{
+    "name": "Jane Updated"
+}
+```
+
+**Response (200):**
+
+```json
+{
+    "message": "User updated successfully.",
+    "user": {
+        "id": 2,
+        "name": "Jane Updated",
+        "email": "jane@example.com",
+        "role": "user",
+        "created_at": "2026-02-15T10:00:00.000000Z",
+        "updated_at": "2026-02-15T10:05:00.000000Z"
+    }
+}
+```
+
+#### Delete User (Admin Only, Cannot Delete Self)
+
+```
+DELETE /api/v1/users/{id}
+Authorization: Bearer {token}
+```
+
+**Response (204):** No content.
+
+### Error Responses
+
+**Validation Error (422):**
+
+```json
+{
+    "message": "The email field is required.",
+    "errors": {
+        "email": ["The email field is required."]
+    }
+}
+```
+
+**Unauthenticated (401):**
+
+```json
+{
+    "message": "Unauthenticated."
+}
+```
+
+**Forbidden (403):**
+
+```json
+{
+    "message": "This action is unauthorized."
+}
+```
+
+**Not Found (404):**
+
+```json
+{
+    "message": "Resource not found."
+}
+```
+
+## Security
+
+- Token-based authentication via Laravel Sanctum
+- Passwords hashed with bcrypt
+- Input validation via Form Request classes
+- SQL injection prevention via Eloquent ORM
+- Role-based access control (Admin/User) via Policies
+- Sensitive fields hidden from API responses (`password`, `remember_token`)
+- API rate limiting (60 req/min general, 5 req/min for auth endpoints)
+- Structured JSON error handling for all API responses
+
+## Authorization Rules
+
+| Action | Admin | Regular User |
+|---|---|---|
+| List users | Yes | Yes |
+| View user | Yes | Yes |
+| Create user | Yes | No |
+| Update user | Yes | Self only |
+| Delete user | Yes (not self) | No |
+
+## Common Commands
+
+```bash
+# Start containers
+./vendor/bin/sail up -d
+
+# Stop containers
+./vendor/bin/sail down
+
+# Run migrations
+./vendor/bin/sail artisan migrate
+
+# Reset database (drop all tables, re-migrate, re-seed)
+./vendor/bin/sail artisan migrate:fresh --seed
+
+# Process queued jobs (emails)
+./vendor/bin/sail artisan queue:work
+
+# Run tests
+./vendor/bin/sail artisan test --compact
+
+# Build frontend
+./vendor/bin/sail shell
+pnpm run build
+exit
+
+# Start Vite dev server (hot reload)
+./vendor/bin/sail shell
+pnpm run dev
+exit
+
+# Code formatting
+./vendor/bin/sail shell
+vendor/bin/pint
+exit
+```
