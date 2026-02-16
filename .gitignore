@@ -2,6 +2,10 @@
 .DS_Store
 .env
 .env.backup
+.agents
+.claude
+.codex
+.cursor
 .env.production
 .phpactor.json
 .phpunit.result.cache
